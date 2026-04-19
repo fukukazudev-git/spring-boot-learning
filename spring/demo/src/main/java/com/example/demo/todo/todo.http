@@ -21,3 +21,25 @@ Content-Type: application/json
   "title":"買い物に行く(完了)",
   "done":true
 }
+
+### 動作確認 POST
+POST http://localhost:8080/todo
+Content-Type: application/json
+
+{
+  "title":"",
+  "done":null
+}
+
+### 動作確認 PUT
+PUT http://localhost:8080/todo/1
+Content-Type: application/json
+
+{
+  "title":"",
+  "done":null
+}
+
+### 動作確認 DELETE
+DELETE http://localhost:8080/todo/999
+

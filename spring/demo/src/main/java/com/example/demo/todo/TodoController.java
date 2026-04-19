@@ -1,5 +1,7 @@
 package com.example.demo.todo;
+
 import java.util.List;
+import jakarta.validation.Valid;
 
 import com.example.demo.todo.dto.TodoDto;
 
@@ -22,7 +24,7 @@ public class TodoController {
 
     //新規作成
     @PostMapping("/todo")
-    public TodoDto create(@RequestBody TodoDto dto){
+    public TodoDto create(@Valid @RequestBody TodoDto dto){
         return todoService.create(dto);
     }
     //全件取得
@@ -37,10 +39,12 @@ public class TodoController {
     }
     //更新処理
     @PutMapping("/todo/{id}")
-    public TodoDto update(@PathVariable Long id , @RequestBody TodoDto dto){
+    public TodoDto update(
+        @PathVariable Long id ,
+        @Valid @RequestBody TodoDto dto
+    ){
         return todoService.update(id, dto);
     }
-
 }
 /*memo
 API(Application Programming Interface)
@@ -56,7 +60,7 @@ HTMLテンプレートを使用せずJSONやテキストを直接返すことが
 @GetMapping
 特定のURLに対するHTTP GETリクエストを処理するために使用される。
 これにより、URLとメソッドを簡潔にマッピングすることが可能。
-定義した該当メソッドはHttpMethodの中のGetrequestに対応する。
+定義した該当メソッドはHttpimport jakarta.validation.Valid;Methodの中のGetrequestに対応する。
 
 @PostMapping
 HTTPのPOSTリクエストを受け付けるアノテーション
@@ -79,4 +83,7 @@ URLの一部を変数として受け取るためのアノテーション
 @RequestBody
 JSON形式のリクエストボディをJavaオブジェクトに変換して受け取るためのアノテーション
 フロントエンドから送信されたデータをサーバー側で処理する際に使用される。
+
+@Valid
+バリデーションを有効にするためのアノテーション
 */

@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.todo.exception.TodoNotFoundException;
 import com.example.demo.todo.dto.TodoDto;
 import com.example.demo.todo.entity.TodoEntity;
 import com.example.demo.todo.repository.TodoRepository;
@@ -37,10 +38,11 @@ public class TodoService {
 
     //更新処理
     public TodoDto update(Long id, TodoDto dto){
-        //orElseThrowは例外の種類がNoSuchElementExceptionであるため、RuntimeExceptionに変更
-        TodoEntity entity = repository.findById(id)
+
         //orElseThrow()は値が無い場合に例外を投げる
-               .orElseThrow(() -> new RuntimeException("Todo not found " + id));
+        TodoEntity entity = repository.findById(id)
+               .orElseThrow(() -> new TodoNotFoundException(id));
+
         entity.setTitle(dto.getTitle());
         entity.setDone(dto.isDone());
 
@@ -50,11 +52,13 @@ public class TodoService {
 
     //削除処理
     public void delete(Long id){
-        repository.deleteById(id);
+        TodoEntity entity = repository.findById(id)
+            .orElseThrow(() -> new TodoNotFoundException(id));
+        repository.delete(entity);
     }
     
     //DTO変換をメソッド化、コードの重複を減らし、保守性も上げる
     private TodoDto toDto(TodoEntity e ){
         return new TodoDto(e.getId(), e.getTitle(), e.isDone());
     }
-}   
+}
