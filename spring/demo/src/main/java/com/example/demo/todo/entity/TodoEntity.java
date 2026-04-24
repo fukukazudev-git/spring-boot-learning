@@ -1,5 +1,4 @@
 package com.example.demo.todo.entity;
-import org.hibernate.annotations.DialectOverride.Version;
 
 import jakarta.persistence.*;
 

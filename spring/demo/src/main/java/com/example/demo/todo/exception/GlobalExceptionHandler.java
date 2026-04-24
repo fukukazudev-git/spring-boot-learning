@@ -1,6 +1,8 @@
 package com.example.demo.todo.exception;
 
 import java.util.List;
+
+import jakarta.persistence.OptimisticLockException;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
@@ -56,8 +58,22 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
-}
 
+    @ExceptionHandler(OptimisticLockException.class)
+    public ResponseEntity<ErrorResponse> handleOptimisticLock(
+            OptimisticLockException ex,
+            HttpServletRequest request
+    ) {
+        ErrorResponse body = new ErrorResponse(
+                409,  // Conflict
+                "Conflict",
+                "他のユーザーが先に更新しました。",
+                request.getRequestURI(),
+                null
+        );
+        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+    }
+}
 /*HttpServletRequest Spring MVCが内部で生成するHTTPリクエスト情報の入れ物。
 URL、ヘッダ、メソッド、ボディ等の情報を保持している。
 getRequestURI() リクエストされたURLのパス部分を返すメソッド。
