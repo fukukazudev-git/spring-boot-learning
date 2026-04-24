@@ -6,6 +6,9 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.demo.todo.dto.CreateTodoRequest;
+import com.example.demo.todo.dto.UpdateTodoRequest;
+import com.example.demo.todo.dto.TodoResponse;
 import com.example.demo.todo.exception.TodoNotFoundException;
 import com.example.demo.todo.dto.TodoDto;
 import com.example.demo.todo.entity.TodoEntity;
@@ -22,11 +25,13 @@ public class TodoService {
     }
 
     //登録処理
-    public TodoDto create(TodoDto dto){
-        TodoEntity entity = new TodoEntity(dto.getTitle(), dto.isDone());
-        TodoEntity saved = repository.save(entity);
-        return toDto(saved);
+    public TodoResponse create(CreateTodoRequest request) {
+    TodoEntity entity = new TodoEntity(request.getTitle(), request.getDone());
+    TodoEntity saved = repository.save(entity);
+    return new TodoResponse(saved.getId(), saved.getTitle(), saved.isDone());
     }
+
+
 
     //全件取得
     public List<TodoDto> getAll(){
@@ -37,17 +42,17 @@ public class TodoService {
     }
 
     //更新処理
-    public TodoDto update(Long id, TodoDto dto){
+    public TodoResponse update(Long id, UpdateTodoRequest request){
 
         //orElseThrow()は値が無い場合に例外を投げる
         TodoEntity entity = repository.findById(id)
                .orElseThrow(() -> new TodoNotFoundException(id));
 
-        entity.setTitle(dto.getTitle());
-        entity.setDone(dto.isDone());
+        entity.setTitle(request.getTitle());
+        entity.setDone(request.isDone());
 
         TodoEntity updated = repository.save(entity);
-        return toDto(updated);
+        return new TodoResponse(updated.getId(), updated.getTitle(), updated.isDone());
     }
 
     //削除処理

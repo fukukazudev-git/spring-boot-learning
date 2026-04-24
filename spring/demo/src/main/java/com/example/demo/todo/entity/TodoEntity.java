@@ -1,4 +1,6 @@
 package com.example.demo.todo.entity;
+import org.hibernate.annotations.DialectOverride.Version;
+
 import jakarta.persistence.*;
 
 //DBのテーブルになる
@@ -11,6 +13,9 @@ public class TodoEntity {
     private Long id;
     private String title;
     private boolean done;
+
+    @Version
+    private Integer version; //楽観的ロックのためのバージョンフィールド
 
     public TodoEntity(){}
     
